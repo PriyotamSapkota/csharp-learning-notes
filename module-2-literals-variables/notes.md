@@ -1,147 +1,190 @@
-# Module 2 — Store and Retrieve Data (Literals & Variables)
+# Module 3 — String Formatting in C#
 
-## Literal Values
-
-A **literal** is a hard-coded constant value that never changes.
+## What This Module Is About
+This module is about how to format and combine strings in C#. You learn how to add special characters like new lines and tabs, display file paths correctly, and combine strings in two different ways.
 
 ---
 
-## Data Types
+## Character Escape Sequences
 
-| Type | Example | Notes |
-|---|---|---|
-| `string` | `"Hello"` | Double quotes, for words/text |
-| `char` | `'A'` | Single quotes, ONE character only |
-| `int` | `123` | Whole numbers, no quotes needed |
-| `float` | `0.25F` | Decimals — least precise, needs `F` suffix |
-| `double` | `2.625` | Decimals — default when no suffix |
-| `decimal` | `12.39m` | Decimals — most precise, needs `m` suffix |
-| `bool` | `true` / `false` | Lowercase only |
+A backslash `\` followed by a character gives a special instruction to the compiler.
 
-### Precision Comparison
-| Type | Precision |
+| Sequence | Effect |
 |---|---|
-| `float` | ~6-9 digits |
-| `double` | ~15-17 digits |
-| `decimal` | 28-29 digits |
+| `\n` | New line |
+| `\t` | Tab |
+| `\"` | Double quote inside a string |
+| `\\` | Single backslash |
+| `\u` | Unicode character (4-digit code) |
 
----
-
-## Examples
-
+### Examples
 ```csharp
-Console.WriteLine("Hello");       // string
-Console.WriteLine('A');           // char
-Console.WriteLine(123);           // int
-Console.WriteLine(0.25F);         // float
-Console.WriteLine(2.625);         // double
-Console.WriteLine(12.39m);        // decimal
-Console.WriteLine(true);          // bool
-Console.WriteLine(false);         // bool
-```
-
----
-
-## Variables
-
-A **variable** is a container for storing a value that can change.
-
-### Declare → Assign → Use
-```csharp
-string firstName;         // declare
-firstName = "Bob";        // assign
-Console.WriteLine(firstName);  // use
-```
-
-### Best Practice — Initialize on one line
-```csharp
-string firstName = "Bob";
-Console.WriteLine(firstName);
-```
-
-### Reassigning Variables
-```csharp
-string firstName = "Bob";
-Console.WriteLine(firstName);  // Bob
-
-firstName = "Liem";
-Console.WriteLine(firstName);  // Liem
-```
-
----
-
-## Variable Naming Rules
-
-| Rule | Example |
-|---|---|
-| Letters, numbers, underscore only | `game_score` ✅ |
-| Must start with letter or `_` | `1score` ❌ |
-| Case-sensitive | `firstName` ≠ `FirstName` |
-| No C# keywords | `string` ❌ as a name |
-| Use camelCase | `gameScore` ✅ |
-| Be descriptive | `x` ❌ → `userAge` ✅ |
-
-### Good Variable Names
-```csharp
-string firstName;
-char userOption;
-int gameScore;
-decimal particlesPerMillion;
-bool processedCustomer;
-```
-
----
-
-## Common Errors
-
-| Mistake | Error |
-|---|---|
-| `"Bob" = firstName` | `CS0131: Left-hand side must be a variable` |
-| Assign wrong type `int x = "Bob"` | `CS0029: Cannot convert string to int` |
-| Use before assigning | `CS0165: Use of unassigned local variable` |
-
----
-
-## var Keyword
-
-`var` lets the compiler **figure out the data type** from the value you give it.
-
-```csharp
-var message = "Hello!";   // compiler sees string
-var score = 100;           // compiler sees int
-var temp = 34.4;           // compiler sees double
-```
-
-### Rules for var
-- Type is **locked** once set — cannot change it later
-- Must be **initialized immediately** — `var message;` alone gives error
-- Use actual data types when possible — `var` is for convenience
-
-### Example — what NOT to do
-```csharp
-var message = "Hello World!";
-message = 10.703m;  // ❌ Error: cannot convert decimal to string
-```
-
----
-
-## Full Example
-
-```csharp
-var name = "Bob";
-var messages = 3;
-var temperature = 34.4;
-
-Console.Write("Hello, ");
-Console.Write(name);
-Console.Write(". You have ");
-Console.Write(messages);
-Console.Write(" messages. Temperature is ");
-Console.Write(temperature);
-Console.Write(" degrees celsius.");
+Console.WriteLine("Hello\nWorld!");     // new line
+Console.WriteLine("Hello\tWorld!");     // tab
+Console.WriteLine("Hello \"World\"!");  // double quotes
+Console.WriteLine("c:\\source\\repos"); // backslash
 ```
 
 Output:
 ```
-Hello, Bob. You have 3 messages. Temperature is 34.4 degrees celsius.
+Hello
+World!
+Hello   World!
+Hello "World"!
+c:\source\repos
 ```
+
+---
+
+## Verbatim String Literal `@`
+
+Use `@` before a string to keep backslashes and whitespace exactly as written — no escaping needed.
+
+```csharp
+Console.WriteLine(@"c:\source\repos");
+
+Console.WriteLine(@"    c:\source\repos    
+        (this is where your code goes)");
+```
+
+Output:
+```
+c:\source\repos
+    c:\source\repos    
+        (this is where your code goes)
+```
+
+---
+
+## Unicode Characters `\u`
+
+Add characters from any language using `\u` + 4-digit code.
+
+```csharp
+// Kon'nichiwa World (Japanese)
+Console.WriteLine("\u3053\u3093\u306B\u3061\u306F World!");
+```
+
+> ⚠️ Not all consoles support Unicode display.
+
+---
+
+## Full Escape Sequence Example
+
+```csharp
+Console.WriteLine("Generating invoices for customer \"Contoso Corp\" ... \n");
+Console.WriteLine("Invoice: 1021\t\tComplete!");
+Console.WriteLine("Invoice: 1022\t\tComplete!");
+Console.Write("\nOutput Directory:\t");
+Console.Write(@"c:\invoices");
+```
+
+Output:
+```
+Generating invoices for customer "Contoso Corp" ...
+
+Invoice: 1021           Complete!
+Invoice: 1022           Complete!
+
+Output Directory:       c:\invoices
+```
+
+---
+
+## String Concatenation `+`
+
+Combining two or more strings using the `+` operator.
+
+```csharp
+string firstName = "Bob";
+string greeting = "Hello";
+Console.WriteLine(greeting + " " + firstName + "!");
+```
+
+Output:
+```
+Hello Bob!
+```
+
+> Avoid creating extra variables if they don't make the code clearer.
+
+---
+
+## String Interpolation `$`
+
+Cleaner way to combine strings — like f-strings in Python.
+Prefix the string with `$` and put variables inside `{}`.
+
+```csharp
+string firstName = "Bob";
+string greeting = "Hello";
+Console.WriteLine($"{greeting} {firstName}!");
+```
+
+Output:
+```
+Hello Bob!
+```
+
+### With multiple variables
+```csharp
+int version = 11;
+string updateText = "Update to Windows";
+Console.WriteLine($"{updateText} {version}!");
+```
+
+Output:
+```
+Update to Windows 11!
+```
+
+---
+
+## Combining `$` and `@` Together
+
+Use both when you need variables AND backslashes in the same string.
+
+```csharp
+string projectName = "First-Project";
+Console.WriteLine($@"C:\Output\{projectName}\Data");
+```
+
+Output:
+```
+C:\Output\First-Project\Data
+```
+
+---
+
+## Concatenation vs Interpolation
+
+| Method | Example | Best For |
+|---|---|---|
+| Concatenation `+` | `"Hello " + name` | Simple, few values |
+| Interpolation `$` | `$"Hello {name}"` | Cleaner, multiple values |
+
+---
+
+## Challenge Solution
+
+```csharp
+string projectName = "ACME";
+string englishLocation = $@"c:\Exercise\{projectName}\data.txt";
+Console.WriteLine($"View English output:\n\t{englishLocation}\n");
+
+string russianMessage = "\u041f\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u0432\u044b\u0432\u043e\u0434";
+string russianLocation = $@"c:\Exercise\{projectName}\ru-RU\data.txt";
+Console.WriteLine($"{russianMessage}:\n\t{russianLocation}\n");
+```
+
+Output:
+```
+View English output:
+    c:\Exercise\ACME\data.txt
+
+Посмотреть русский вывод:
+    c:\Exercise\ACME\ru-RU\data.txt
+```
+
+---
+
